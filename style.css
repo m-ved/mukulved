@@ -301,11 +301,15 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
 }
 .marquee {
   display: flex;
+  flex-shrink: 0;
   width: max-content;
   animation: marquee-scroll 24s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 .marquee-content {
   display: flex;
+  flex-shrink: 0;
   white-space: nowrap;
   font-family: var(--mono);
   font-weight: 700;
