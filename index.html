@@ -105,7 +105,7 @@
   <div class="wrap">
     <div class="hero-grid">
       <div class="hero-text">
-        <span class="eyebrow"><span class="tick"></span>data &amp; ml engineer</span>
+        <span class="eyebrow"><span class="tick"></span><span id="hero-scramble" data-value="data & ml engineer">data &amp; ml engineer</span></span>
         <h1>MUKUL<br><span class="accent">VED</span></h1>
         <p class="lede">I build data pipelines and applied-ML systems that turn messy data into decisions.</p>
         <p class="proof">Around 3 years across consulting, enterprise, and nonprofit. Pipelines processing 25M+ records a month, 25+ BI dashboards shipped, and healthcare ML from fraud graphs to ER discharge NLP.</p>
@@ -593,6 +593,29 @@
         targetScale = 1;
       });
     });
+  }
+
+  // hacker text scramble for hero eyebrow
+  if(!reduce) {
+    var scrambleEl = document.getElementById('hero-scramble');
+    if(scrambleEl) {
+      var originalText = scrambleEl.getAttribute('data-value');
+      var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      var iteration = 0;
+      var interval = setInterval(function() {
+        scrambleEl.textContent = originalText.split("").map(function(letter, index) {
+          if(index < iteration) {
+            return originalText[index];
+          }
+          return letters[Math.floor(Math.random() * letters.length)];
+        }).join("");
+        
+        if(iteration >= originalText.length) {
+          clearInterval(interval);
+        }
+        iteration += 1 / 3;
+      }, 30);
+    }
   }
 </script>
 </body>
