@@ -579,19 +579,7 @@ html[data-theme="dark"] .chip:hover{background:var(--blue);color:var(--white)}
   html[data-theme="dark"] .nav-links a:hover{background:rgba(255,255,255,.07)}
 }
 
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none}
-  .hero-text .eyebrow,
-  .hero-text h1,
-  .hero-text .lede,
-  .hero-text .proof,
-  .hero-text .hero-cta,
-  .hero-text .loc-row,
-  .avatar-col{opacity:1;transform:none;animation:none}
-  .tilt-card{transform:none!important}
-}
+
 /* disable tilt on touch devices */
 @media(hover:none){
   .tilt-card{transform:none!important}
@@ -669,6 +657,3 @@ html[data-theme="dark"] .chip:hover{background:var(--blue);color:var(--white)}
   border-radius: 50%;
 }
 
-@media(max-width:768px) {
-  .emote-wrapper { display: none !important; }
-}
