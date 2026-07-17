@@ -214,7 +214,6 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
 
 /* --- staggered hero entrance --- */
 .hero-text .eyebrow,
-.hero-text h1,
 .hero-text .lede,
 .hero-text .proof,
 .hero-text .hero-cta,
@@ -224,8 +223,13 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
   transform:translateY(18px);
   animation:hero-enter .6s ease forwards;
 }
+.hero-text h1{
+  opacity:0;
+  transform:translateY(18px);
+  animation:hero-enter .6s ease forwards, glitch 3s ease-in-out infinite;
+  animation-delay:.18s, 2s;
+}
 .hero-text .eyebrow { animation-delay:.1s }
-.hero-text h1       { animation-delay:.18s }
 .hero-text .lede    { animation-delay:.26s }
 .hero-text .proof   { animation-delay:.34s }
 .hero-text .hero-cta{ animation-delay:.42s }
