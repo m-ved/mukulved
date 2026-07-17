@@ -466,11 +466,12 @@ footer .made{color:var(--yellow)}
   .exp .when{text-align:left;padding-top:0}
   .section{padding:48px 0}
   .manifesto blockquote{font-size:1.8rem}
-  /* disable heavy infinite animations on mobile for scroll performance */
-  .hero h1, .avatar, .sticker, .float-badge, .dot::after {
-    animation: none !important;
-    transform: none !important;
-  }
+}
+
+/* ---------- hardware acceleration for animations ---------- */
+.hero h1, .avatar, .sticker, .float-badge, .dot::after {
+  will-change: transform, text-shadow;
+  transform: translateZ(0); /* force GPU layer */
 }
 
 /* ---------- dark mode ---------- */
