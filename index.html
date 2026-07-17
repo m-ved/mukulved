@@ -550,9 +550,9 @@
       var rafId = null;
 
       function update() {
-        currentX += (targetX - currentX) * 0.25;
-        currentY += (targetY - currentY) * 0.25;
-        currentScale += (targetScale - currentScale) * 0.25;
+        currentX += (targetX - currentX) * 0.85;
+        currentY += (targetY - currentY) * 0.85;
+        currentScale += (targetScale - currentScale) * 0.85;
 
         card.style.transform = 'perspective(600px) rotateX(' + currentX + 'deg) rotateY(' + currentY + 'deg) scale(' + currentScale + ')';
 
