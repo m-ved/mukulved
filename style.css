@@ -41,6 +41,33 @@
 html{scroll-behavior:smooth; cursor:crosshair;}
 a, button, .btn, .theme-toggle, .hamburger { cursor:pointer; }
 
+::selection {
+  background: var(--coral);
+  color: var(--ink);
+}
+::-moz-selection {
+  background: var(--coral);
+  color: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  background: var(--bg);
+  border-left: var(--bd);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--blue);
+  border-left: var(--bd);
+  border-bottom: var(--bd);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mint);
+}
+::-webkit-scrollbar-corner {
+  background: var(--ink);
+}
+
 body{
   font-family:var(--body);
   color:var(--pagetext);
@@ -146,10 +173,15 @@ a{color:var(--blue);text-decoration:none}
 
 
 .tag{
-  font-family:var(--mono);font-size:.72rem;font-weight:500;
-  border:2px solid var(--ink);border-radius:20px;
-  padding:3px 11px;background:var(--paper);white-space:nowrap;
+  font-family:var(--mono);font-size:.72rem;font-weight:700;
+  border:2px solid var(--ink);border-radius:6px;
+  padding:4px 12px;background:var(--paper);white-space:nowrap;
+  box-shadow:3px 3px 0 0 var(--ink);
+  transition:transform .15s ease, box-shadow .15s ease;
+  cursor:pointer;
 }
+.tag:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 0 var(--ink)}
+.tag:active{transform:translate(3px,3px);box-shadow:0 0 0 0 var(--ink)}
 
 .btn{
   display:inline-flex;align-items:center;gap:8px;
@@ -210,7 +242,28 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
 .hamburger span{width:20px;height:2.5px;background:var(--ink);border-radius:2px}
 
 /* ---------- hero ---------- */
-.hero{padding:66px 0 60px}
+.hero{padding:66px 0 60px; position:relative;}
+.hero-bob { position:absolute; z-index:1; }
+.bob-1 { 
+  width:80px; height:80px; top:10%; right:2%; 
+  animation:spin-bounce 12s linear infinite;
+}
+.bob-2 { 
+  width:60px; height:60px; bottom:15%; left:4%; 
+  animation:float-bob 8s ease-in-out infinite;
+}
+
+@keyframes spin-bounce {
+  0% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(90deg) translateY(-20px); }
+  50% { transform: rotate(180deg) translateY(0); }
+  75% { transform: rotate(270deg) translateY(20px); }
+  100% { transform: rotate(360deg) translateY(0); }
+}
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
 .hero-grid{display:grid;grid-template-columns:1.35fr .95fr;gap:44px;align-items:center}
 .hero h1{
   font-family:var(--display);font-weight:800;
