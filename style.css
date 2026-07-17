@@ -112,6 +112,12 @@ a{color:var(--blue);text-decoration:none}
 
 .card{
   background:var(--white);color:var(--ink);
+  /* force text variables to remain dark inside the white cards */
+  --text-body:#333;
+  --text-secondary:#555;
+  --text-muted:#888;
+  --text-dim:#666;
+  --text-exp:#2a2a2a;
   border:var(--bd);border-radius:var(--radius);
   box-shadow:var(--sh);
   transition:transform .14s ease, box-shadow .14s ease;
