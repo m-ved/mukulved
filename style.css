@@ -437,8 +437,7 @@ footer .made{color:var(--yellow)}
 
 /* ---------- responsive ---------- */
 @media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:36px}
-  .avatar-col{order:-1}
+  .hero-grid{grid-template-columns:1fr;gap:46px}
   .about-grid{grid-template-columns:1fr}
   .proj-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:1fr}
@@ -456,11 +455,17 @@ footer .made{color:var(--yellow)}
   .hamburger{display:flex}
 }
 @media(max-width:540px){
+  .wrap{padding:0 18px}
+  .hero{padding:40px 0 50px}
+  .hero h1{font-size:2.8rem}
+  .avatar-stack{width: 260px}
   .proj-grid{grid-template-columns:1fr}
-  .stats{grid-template-columns:1fr}
-  .exp-top{flex-direction:column}
-  .exp .when{text-align:left}
-  .section{padding:56px 0}
+  .stats{grid-template-columns:repeat(2,1fr); gap:12px}
+  .stat{padding:16px 12px}
+  .exp-top{flex-direction:column;gap:8px}
+  .exp .when{text-align:left;padding-top:0}
+  .section{padding:48px 0}
+  .manifesto blockquote{font-size:1.8rem}
 }
 
 /* ---------- dark mode ---------- */
