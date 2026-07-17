@@ -195,7 +195,8 @@
     display:grid;place-items:center;overflow:hidden;
   }
   .avatar .mono-xl{font-family:var(--display);font-weight:800;font-size:6.5rem;letter-spacing:-.04em;line-height:1}
-  .avatar img{width:100%;height:100%;object-fit:cover;display:none} /* drop in profile.jpg + set display:block */
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block;grid-area:1/1}
+  .avatar .mono-xl{grid-area:1/1;display:none}
   .sticker{
     position:absolute;font-family:var(--mono);font-weight:700;font-size:.72rem;color:var(--ink);
     background:var(--yellow);border:2px solid var(--ink);border-radius:8px;
@@ -408,7 +409,6 @@
       <div class="avatar-col">
         <div class="avatar-stack">
           <div class="avatar">
-            <!-- To use a real photo: add profile.jpg next to this file, then set the img below to display:block -->
             <img src="profile.jpg" alt="Mukul Ved">
             <span class="mono-xl">MV</span>
           </div>
