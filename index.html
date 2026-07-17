@@ -171,6 +171,13 @@
     font-family:var(--display);font-weight:800;
     font-size:clamp(2.9rem,8vw,5.4rem);line-height:.94;
     letter-spacing:-.03em;margin:20px 0 18px;
+    position:relative;
+    animation:glitch 3s ease-in-out infinite;
+  }
+  @keyframes glitch{
+    0%,100%,60%{text-shadow:none}
+    20%{text-shadow:4px 4px var(--yellow),-4px -4px var(--coral)}
+    40%{text-shadow:-4px 4px var(--mint),4px -4px var(--lilac)}
   }
   .hero h1 .accent{
     color:var(--blue);
@@ -193,6 +200,11 @@
     background:var(--blue);color:var(--white);
     border:var(--bd);border-radius:var(--radius);box-shadow:var(--sh-lg);
     display:grid;place-items:center;overflow:hidden;
+    animation:avatar-float 3s ease-in-out infinite;
+  }
+  @keyframes avatar-float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-14px)}
   }
   .avatar .mono-xl{font-family:var(--display);font-weight:800;font-size:6.5rem;letter-spacing:-.04em;line-height:1}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block;grid-area:1/1}
@@ -202,10 +214,22 @@
     background:var(--yellow);border:2px solid var(--ink);border-radius:8px;
     padding:6px 10px;box-shadow:var(--sh-sm);
   }
-  .sticker.s1{top:-16px;right:-14px;transform:rotate(6deg);background:var(--coral)}
-  .sticker.s2{bottom:-16px;left:-16px;transform:rotate(-5deg);background:var(--yellow)}
+  .sticker.s1{top:-16px;right:-14px;background:var(--coral);animation:bounce-s1 2s ease-in-out infinite}
+  .sticker.s2{bottom:-16px;left:-16px;background:var(--yellow);animation:bounce-s2 2s ease-in-out infinite;animation-delay:.3s}
   .float-badge{position:absolute;width:46px;height:46px;display:grid;place-items:center;background:var(--white);color:var(--ink);border:var(--bd);border-radius:10px;box-shadow:var(--sh-sm);font-family:var(--mono);font-weight:700;font-size:.85rem}
-  .float-badge.f1{top:40%;left:-30px;transform:rotate(-8deg)}
+  .float-badge.f1{top:40%;left:-30px;animation:bounce-f1 2s ease-in-out infinite;animation-delay:.6s}
+  @keyframes bounce-s1{
+    0%,100%{transform:translateY(0) rotate(6deg)}
+    50%{transform:translateY(-10px) rotate(6deg)}
+  }
+  @keyframes bounce-s2{
+    0%,100%{transform:translateY(0) rotate(-5deg)}
+    50%{transform:translateY(-10px) rotate(-5deg)}
+  }
+  @keyframes bounce-f1{
+    0%,100%{transform:translateY(0) rotate(-8deg)}
+    50%{transform:translateY(-10px) rotate(-8deg)}
+  }
 
   /* stats strip */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
@@ -711,8 +735,21 @@
     });
   });
 
-  // scroll reveal
+  // motion effects inspired by singhinusa.dev
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    var heroGrid = document.querySelector('.hero-grid');
+    window.addEventListener('scroll', function(){
+      if(heroGrid){ heroGrid.style.transform = 'translateY(' + (window.scrollY * 0.15) + 'px)'; }
+    }, {passive:true});
+    document.body.style.opacity = '0';
+    window.addEventListener('load', function(){
+      document.body.style.transition = 'opacity .45s ease';
+      document.body.style.opacity = '1';
+    });
+  }
+
+  // scroll reveal
   if(!reduce && 'IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
