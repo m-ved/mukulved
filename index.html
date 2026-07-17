@@ -65,6 +65,7 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+<canvas id="network-bg" aria-hidden="true"></canvas>
 
 <!-- scroll progress bar -->
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
@@ -669,6 +670,102 @@
     document.querySelectorAll('.scramble-on-scroll').forEach(function(el){
       scrambleIO.observe(el);
     });
+  }
+
+  // interactive network background
+  if(!reduce) {
+    var netCanvas = document.getElementById('network-bg');
+    if(netCanvas) {
+      var ctx = netCanvas.getContext('2d', { alpha: true });
+      var netParticles = [];
+      var isMobile = window.innerWidth < 768;
+      var netParticleCount = isMobile ? 30 : 60;
+      var netMaxDistance = 150;
+      var netMouse = { x: -1000, y: -1000, radius: 180 };
+
+      function resizeNet() {
+        netCanvas.width = window.innerWidth;
+        netCanvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeNet);
+      resizeNet();
+
+      window.addEventListener('mousemove', function(e) {
+        netMouse.x = e.clientX;
+        netMouse.y = e.clientY;
+      }, {passive:true});
+      window.addEventListener('mouseout', function() {
+        netMouse.x = -1000;
+        netMouse.y = -1000;
+      });
+
+      function NetParticle() {
+        this.x = Math.random() * netCanvas.width;
+        this.y = Math.random() * netCanvas.height;
+        this.size = Math.random() * 2 + 1.5;
+        this.dx = (Math.random() - 0.5) * 1.0;
+        this.dy = (Math.random() - 0.5) * 1.0;
+      }
+      
+      NetParticle.prototype.update = function(isDark) {
+        if (this.x > netCanvas.width || this.x < 0) this.dx = -this.dx;
+        if (this.y > netCanvas.height || this.y < 0) this.dy = -this.dy;
+
+        var dx = netMouse.x - this.x;
+        var dy = netMouse.y - this.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < netMouse.radius) {
+          var force = (netMouse.radius - distance) / netMouse.radius;
+          this.x -= (dx / distance) * force * 3;
+          this.y -= (dy / distance) * force * 3;
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = isDark ? '#12CBA6' : '#141414'; 
+        ctx.fill();
+      };
+
+      for (var i = 0; i < netParticleCount; i++) {
+        netParticles.push(new NetParticle());
+      }
+
+      function animateNet() {
+        requestAnimationFrame(animateNet);
+        ctx.clearRect(0, 0, netCanvas.width, netCanvas.height);
+        
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+        for (var i = 0; i < netParticles.length; i++) {
+          netParticles[i].update(isDark);
+          
+          for (var j = i + 1; j < netParticles.length; j++) {
+            var dx = netParticles[i].x - netParticles[j].x;
+            var dy = netParticles[i].y - netParticles[j].y;
+            var distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < netMaxDistance) {
+              var opacity = 1 - (distance / netMaxDistance);
+              ctx.beginPath();
+              if(isDark) {
+                ctx.strokeStyle = 'rgba(177, 150, 255, ' + (opacity * 0.4) + ')';
+              } else {
+                ctx.strokeStyle = 'rgba(47, 75, 255, ' + (opacity * 0.5) + ')';
+              }
+              ctx.lineWidth = 1;
+              ctx.moveTo(netParticles[i].x, netParticles[i].y);
+              ctx.lineTo(netParticles[j].x, netParticles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      animateNet();
+    }
   }
 </script>
 </body>

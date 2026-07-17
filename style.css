@@ -55,6 +55,18 @@ body{
   transition:background-color .25s ease, color .25s ease;
 }
 
+/* ---------- network background ---------- */
+#network-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 /* ---------- noise overlay ---------- */
 body::after {
   content: "";
