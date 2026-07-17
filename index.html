@@ -66,9 +66,10 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
+<!-- scroll progress bar -->
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
 <header>
-  <!-- scroll progress bar -->
-  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   <div class="wrap">
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="#top" aria-label="Mukul Ved, home">
@@ -472,11 +473,19 @@
 
   // scroll progress bar
   var progressBar = document.getElementById('scroll-progress');
-  window.addEventListener('scroll', function(){
-    var h = document.documentElement.scrollHeight - window.innerHeight;
-    var pct = h > 0 ? (window.scrollY / h) * 100 : 0;
-    progressBar.style.width = pct + '%';
-  }, {passive:true});
+  if(progressBar){
+    window.addEventListener('scroll', function(){
+      var scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      var docHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      );
+      var h = docHeight - window.innerHeight;
+      var pct = h > 0 ? (scrollTop / h) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }, {passive:true});
+  }
 
   // animated stat counters
   function animateCounters(){
