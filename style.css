@@ -120,6 +120,26 @@ a{color:var(--blue);text-decoration:none}
   box-shadow:var(--sh-lg);
 }
 
+/* ---------- spotlight glow ---------- */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0) var(--mouse-y, 0), 
+    rgba(255, 255, 255, 0.05), 
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+html[data-theme="dark"] .card:hover::before {
+  opacity: 1;
+}
+
 .tag{
   font-family:var(--mono);font-size:.72rem;font-weight:500;
   border:2px solid var(--ink);border-radius:20px;
