@@ -243,27 +243,7 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
 
 /* ---------- hero ---------- */
 .hero{padding:66px 0 60px; position:relative;}
-.hero-bob { position:absolute; z-index:1; }
-.bob-1 { 
-  width:80px; height:80px; top:10%; right:2%; 
-  animation:spin-bounce 12s linear infinite;
-}
-.bob-2 { 
-  width:60px; height:60px; bottom:15%; left:4%; 
-  animation:float-bob 8s ease-in-out infinite;
-}
 
-@keyframes spin-bounce {
-  0% { transform: rotate(0deg) translateY(0); }
-  25% { transform: rotate(90deg) translateY(-20px); }
-  50% { transform: rotate(180deg) translateY(0); }
-  75% { transform: rotate(270deg) translateY(20px); }
-  100% { transform: rotate(360deg) translateY(0); }
-}
-@keyframes float-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-30px); }
-}
 .hero-grid{display:grid;grid-template-columns:1.35fr .95fr;gap:44px;align-items:center}
 .hero h1{
   font-family:var(--display);font-weight:800;
