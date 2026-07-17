@@ -772,6 +772,96 @@
       animateNet();
     }
   }
+
+  // emote companion logic
+  if(!reduce && window.innerWidth > 768) {
+    const wrapper = document.getElementById('emoteWrapper');
+    const pupils = document.querySelectorAll('.emote-pupil');
+    const lids = document.querySelectorAll('.emote-eye-lid');
+    if(wrapper && pupils.length > 0) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let currentPupilX = 0, currentPupilY = 0;
+      let targetPupilX = 0, targetPupilY = 0;
+      let currentRotX = 0, currentRotY = 0;
+      let targetRotX = 0, targetRotY = 0;
+      let idleTimer = null, isIdle = false;
+      let idleTargetX = 0, idleTargetY = 0;
+      
+      const LERP = 0.15;
+      const MAX_P = 7;
+      const MAX_R = 12;
+
+      function resetIdle() {
+        isIdle = false;
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          isIdle = true;
+          pickIdle();
+        }, 3000);
+      }
+      function pickIdle() {
+        if(!isIdle) return;
+        idleTargetX = (Math.random() - 0.5) * window.innerWidth;
+        idleTargetY = (Math.random() - 0.5) * window.innerHeight;
+        blink();
+        setTimeout(pickIdle, 1000 + Math.random() * 2000);
+      }
+      function blink() {
+        lids.forEach(lid => {
+          lid.style.transition = 'transform 0.1s ease';
+          lid.style.transform = 'scaleY(1)'; 
+          setTimeout(() => { lid.style.transform = 'scaleY(0)'; }, 150);
+        });
+      }
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        resetIdle();
+      });
+      function animateEmote() {
+        const rect = wrapper.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        let tx = isIdle ? (cx + idleTargetX) : mouseX;
+        let ty = isIdle ? (cy + idleTargetY) : mouseY;
+        const dx = tx - cx;
+        const dy = ty - cy;
+        const dist = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx);
+        const pDist = Math.min(dist / 15, MAX_P);
+        
+        targetPupilX = Math.cos(angle) * pDist;
+        targetPupilY = Math.sin(angle) * pDist;
+        targetRotY = (dx / window.innerWidth) * MAX_R;
+        targetRotX = (dy / window.innerHeight) * MAX_R;
+
+        currentPupilX += (targetPupilX - currentPupilX) * LERP;
+        currentPupilY += (targetPupilY - currentPupilY) * LERP;
+        currentRotX += (targetRotX - currentRotX) * LERP;
+        currentRotY += (targetRotY - currentRotY) * LERP;
+
+        pupils.forEach(p => {
+          p.style.setProperty('--px', `${currentPupilX}px`);
+          p.style.setProperty('--py', `${currentPupilY}px`);
+        });
+        wrapper.style.setProperty('--rotX', `${currentRotY}px`);
+        wrapper.style.setProperty('--rotY', `${currentRotX}px`);
+        
+        requestAnimationFrame(animateEmote);
+      }
+      resetIdle();
+      setInterval(blink, 5000); 
+      animateEmote();
+    }
+  }
 </script>
+
+<div class="emote-wrapper" id="emoteWrapper" aria-hidden="true">
+  <div class="emote-companion">
+    <div class="emote-eye"><div class="emote-eye-lid"></div><div class="emote-pupil"></div></div>
+    <div class="emote-eye"><div class="emote-eye-lid"></div><div class="emote-pupil"></div></div>
+  </div>
+</div>
 </body>
 </html>

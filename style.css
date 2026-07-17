@@ -596,3 +596,79 @@ html[data-theme="dark"] .chip:hover{background:var(--blue);color:var(--white)}
 @media(hover:none){
   .tilt-card{transform:none!important}
 }
+
+/* ---------- emote companion ---------- */
+.emote-wrapper {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 70px;
+  height: 70px;
+  z-index: 9999;
+  transform: translate(var(--rotX, 0px), var(--rotY, 0px));
+  will-change: transform;
+}
+
+.emote-companion {
+  width: 100%;
+  height: 100%;
+  background: var(--mint);
+  border: var(--bd);
+  border-radius: 12px;
+  box-shadow: 6px 6px 0 0 var(--ink);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.emote-wrapper:hover .emote-companion {
+  background: var(--coral);
+  box-shadow: 2px 2px 0 0 var(--ink);
+  transform: translate(4px, 4px);
+}
+
+.emote-eye {
+  width: 20px;
+  height: 28px;
+  background: var(--white);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.emote-eye-lid {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 100%;
+  background: var(--ink);
+  transform-origin: top;
+  transform: scaleY(0);
+  z-index: 2;
+}
+
+.emote-pupil {
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  border-radius: 2px;
+  position: absolute;
+  top: 50%; left: 50%;
+  margin-top: -4px; margin-left: -4px;
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+  will-change: transform;
+}
+
+.emote-wrapper:hover .emote-eye-lid {
+  transform: scaleY(0.6);
+  transition: transform 0.15s ease;
+}
+.emote-wrapper:hover .emote-pupil {
+  border-radius: 50%;
+}
+
+@media(max-width:768px) {
+  .emote-wrapper { display: none !important; }
+}
