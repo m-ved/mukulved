@@ -449,7 +449,13 @@
   if(!reduce){
     var heroGrid = document.querySelector('.hero-grid');
     window.addEventListener('scroll', function(){
-      if(heroGrid){ heroGrid.style.transform = 'translateY(' + (window.scrollY * 0.15) + 'px)'; }
+      if(heroGrid){
+        if(window.innerWidth > 900) {
+          heroGrid.style.transform = 'translateY(' + (window.scrollY * 0.15) + 'px)';
+        } else {
+          heroGrid.style.transform = 'none';
+        }
+      }
     }, {passive:true});
   }
 
