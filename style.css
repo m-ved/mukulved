@@ -96,6 +96,19 @@ a{color:var(--blue);text-decoration:none}
 .lift:hover{transform:translate(-3px,-3px);box-shadow:var(--sh-lg)}
 .lift:active{transform:translate(3px,3px);box-shadow:var(--sh-sm)}
 
+/* --- 3D card tilt --- */
+.tilt-card{
+  transform-style:preserve-3d;
+  transition:transform .18s ease, box-shadow .18s ease;
+  will-change:transform;
+}
+.tilt-card .tilt-inner{
+  transform:translateZ(24px);
+}
+.tilt-card:hover{
+  box-shadow:var(--sh-lg);
+}
+
 .tag{
   font-family:var(--mono);font-size:.72rem;font-weight:500;
   border:2px solid var(--ink);border-radius:20px;
@@ -432,4 +445,9 @@ html[data-theme="dark"] .chip:hover{background:var(--blue);color:var(--white)}
   .hero-text .hero-cta,
   .hero-text .loc-row,
   .avatar-col{opacity:1;transform:none;animation:none}
+  .tilt-card{transform:none!important}
+}
+/* disable tilt on touch devices */
+@media(hover:none){
+  .tilt-card{transform:none!important}
 }

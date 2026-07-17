@@ -170,7 +170,7 @@
       <h2 class="section-title">The short version<span class="bar"></span></h2>
     </div>
     <div class="about-grid">
-      <div class="card lift about-card a1 reveal">
+      <div class="card lift tilt-card about-card a1 reveal">
         <span class="kicker"><span class="sq"></span>education</span>
         <div class="edu-item">
           <h3>Illinois Institute of Technology</h3>
@@ -183,14 +183,14 @@
           <div class="meta">2019 - 2023 &middot; India</div>
         </div>
       </div>
-      <div class="card lift about-card a2 reveal">
+      <div class="card lift tilt-card about-card a2 reveal">
         <span class="kicker"><span class="sq"></span>current role</span>
         <h3>Chicago Education Advocacy Cooperative</h3>
         <div class="sub">ML Engineer</div>
         <div class="meta">Apr 2025 - Present &middot; Chicago, IL</div>
         <p>Predictive modeling and NLP to flag student disengagement early across 12 partner schools, turning survey and socioeconomic data into interventions teachers can act on.</p>
       </div>
-      <div class="card lift about-card a3 reveal">
+      <div class="card lift tilt-card about-card a3 reveal">
         <span class="kicker"><span class="sq"></span>what i do</span>
         <h3>Data engineering, plus applied ML</h3>
         <p>I like problems where the output has to change a real decision: an intervention, a contract renewal, a safer discharge. Comfortable owning the whole path, from pipeline to model to the dashboard someone opens on Monday.</p>
@@ -208,7 +208,7 @@
     </div>
     <div class="exp-list">
 
-      <article class="card exp reveal">
+      <article class="card tilt-card exp reveal">
         <div class="exp-top">
           <div class="exp-headwrap">
             <span class="exp-badge">CE</span>
@@ -307,14 +307,14 @@
     </div>
     <div class="proj-grid">
 
-      <article class="card lift proj reveal">
+      <article class="card lift tilt-card proj reveal">
         <div class="proj-ico">&#128138;</div>
         <h3>PromptRx</h3>
         <p>Turns dense ER discharge instructions into plain-language, categorized summaries. Azure OpenAI (GPT-4.1), Flask, and Streamlit with a HIPAA-aware design and a factual-validation harness that checks the simplified text against the original.</p>
         <div class="stack"><span class="tag">Azure OpenAI</span><span class="tag">Flask</span><span class="tag">Streamlit</span><span class="tag">Healthcare</span></div>
       </article>
 
-      <article class="card lift proj reveal">
+      <article class="card lift tilt-card proj reveal">
         <div class="proj-ico">&#128373;</div>
         <h3>Claims Fraud Detection</h3>
         <p>Graph plus gradient-boosting fraud model over 2M+ insurance claims and a 200K-node graph, reaching 0.91 AUC-ROC by combining relational structure with claim-level features.</p>
@@ -361,27 +361,27 @@
       <h2 class="section-title">Tools I reach for<span class="bar"></span></h2>
     </div>
     <div class="tech-grid">
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>Languages</h3>
         <div class="chips"><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">R</span><span class="chip">JavaScript</span></div>
       </div>
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>Data Engineering</h3>
         <div class="chips"><span class="chip">PySpark</span><span class="chip">Kafka</span><span class="chip">Airflow</span><span class="chip">dbt</span><span class="chip">Hadoop</span><span class="chip">ETL</span></div>
       </div>
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>Machine Learning</h3>
         <div class="chips"><span class="chip">scikit-learn</span><span class="chip">TensorFlow</span><span class="chip">PyTorch</span><span class="chip">Pandas</span><span class="chip">NumPy</span><span class="chip">LLMs</span><span class="chip">A/B Testing</span><span class="chip">Time Series</span></div>
       </div>
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>BI &amp; Visualization</h3>
         <div class="chips"><span class="chip">Tableau</span><span class="chip">Power BI</span><span class="chip">Looker</span><span class="chip">Matplotlib</span><span class="chip">Seaborn</span><span class="chip">Excel</span></div>
       </div>
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>Cloud</h3>
         <div class="chips"><span class="chip">AWS (S3, SageMaker)</span><span class="chip">Azure</span><span class="chip">GCP (BigQuery)</span></div>
       </div>
-      <div class="card lift tech-card reveal">
+      <div class="card lift tilt-card tech-card reveal">
         <h3><span class="sq"></span>Databases &amp; Tools</h3>
         <div class="chips"><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MongoDB</span><span class="chip">Neo4j</span><span class="chip">Git</span><span class="chip">Docker</span></div>
       </div>
@@ -520,6 +520,26 @@
   window.addEventListener('scroll', setActive, {passive:true});
   window.addEventListener('resize', setActive, {passive:true});
   setActive();
+
+  // 3D card tilt on hover
+  if(!reduce && window.matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.tilt-card').forEach(function(card){
+      card.addEventListener('mousemove', function(e){
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var cx = rect.width / 2;
+        var cy = rect.height / 2;
+        // max tilt 8 degrees
+        var rotY = ((x - cx) / cx) * 8;
+        var rotX = ((cy - y) / cy) * 8;
+        card.style.transform = 'perspective(600px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.02)';
+      });
+      card.addEventListener('mouseleave', function(){
+        card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+      });
+    });
+  }
 </script>
 </body>
 </html>
