@@ -539,22 +539,52 @@
   window.addEventListener('resize', setActive, {passive:true});
   setActive();
 
-  // 3D card tilt on hover
+  // 3D card tilt on hover (Smooth Lerp)
   if(!reduce && window.matchMedia('(hover:hover)').matches){
     document.querySelectorAll('.tilt-card').forEach(function(card){
+      var rect, cx, cy;
+      var targetX = 0, targetY = 0;
+      var currentX = 0, currentY = 0;
+      var targetScale = 1, currentScale = 1;
+      var isHovering = false;
+      var rafId = null;
+
+      function update() {
+        currentX += (targetX - currentX) * 0.25;
+        currentY += (targetY - currentY) * 0.25;
+        currentScale += (targetScale - currentScale) * 0.25;
+
+        card.style.transform = 'perspective(600px) rotateX(' + currentX + 'deg) rotateY(' + currentY + 'deg) scale(' + currentScale + ')';
+
+        if (isHovering || Math.abs(targetX - currentX) > 0.01 || Math.abs(targetY - currentY) > 0.01 || Math.abs(targetScale - currentScale) > 0.001) {
+          rafId = requestAnimationFrame(update);
+        } else {
+          card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+          rafId = null;
+        }
+      }
+
+      card.addEventListener('mouseenter', function(){
+        isHovering = true;
+        rect = card.getBoundingClientRect();
+        cx = rect.width / 2;
+        cy = rect.height / 2;
+        targetScale = 1.02;
+        if(!rafId) rafId = requestAnimationFrame(update);
+      });
+
       card.addEventListener('mousemove', function(e){
-        var rect = card.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
-        var cx = rect.width / 2;
-        var cy = rect.height / 2;
-        // max tilt 8 degrees
-        var rotY = ((x - cx) / cx) * 8;
-        var rotX = ((cy - y) / cy) * 8;
-        card.style.transform = 'perspective(600px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.02)';
+        targetY = ((x - cx) / cx) * 10;
+        targetX = ((cy - y) / cy) * 10; 
       });
+
       card.addEventListener('mouseleave', function(){
-        card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+        isHovering = false;
+        targetX = 0;
+        targetY = 0;
+        targetScale = 1;
       });
     });
   }

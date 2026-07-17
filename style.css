@@ -110,7 +110,7 @@ a{color:var(--blue);text-decoration:none}
 /* --- 3D card tilt --- */
 .tilt-card{
   transform-style:preserve-3d;
-  transition:transform .18s ease, box-shadow .18s ease;
+  transition:box-shadow .2s ease-out;
   will-change:transform;
 }
 .tilt-card .tilt-inner{
