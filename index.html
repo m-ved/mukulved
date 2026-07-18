@@ -674,105 +674,118 @@
     });
   }
 
-  // interactive network background
+  // interactive DAG data pipeline background
   if(!reduce) {
-    var netCanvas = document.getElementById('network-bg');
-    if(netCanvas) {
-      var ctx = netCanvas.getContext('2d', { alpha: true });
-      var netParticles = [];
-      var isMobile = window.innerWidth < 768;
-      var netParticleCount = isMobile ? 30 : 60;
-      var netMaxDistance = 150;
-      var netMouse = { x: -1000, y: -1000, radius: 180 };
-
-      function resizeNet() {
-        netCanvas.width = window.innerWidth;
-        netCanvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resizeNet);
-      resizeNet();
-
-      window.addEventListener('mousemove', function(e) {
-        netMouse.x = e.clientX;
-        netMouse.y = e.clientY;
-      }, {passive:true});
-      window.addEventListener('touchmove', function(e) {
-        if(e.touches.length > 0) {
-          netMouse.x = e.touches[0].clientX;
-          netMouse.y = e.touches[0].clientY;
-        }
-      }, {passive:true});
-      window.addEventListener('mouseout', function() {
-        netMouse.x = -1000;
-        netMouse.y = -1000;
-      });
-
-      function NetParticle() {
-        this.x = Math.random() * netCanvas.width;
-        this.y = Math.random() * netCanvas.height;
-        this.size = Math.random() * 2 + 1.5;
-        this.dx = (Math.random() - 0.5) * 1.0;
-        this.dy = (Math.random() - 0.5) * 1.0;
-      }
+    const canvas = document.getElementById('network-bg');
+    if(canvas) {
+      const ctx = canvas.getContext('2d', { alpha: true });
+      let nodes = [];
+      let edges = [];
+      let packets = [];
       
-      NetParticle.prototype.update = function(isDark) {
-        if (this.x > netCanvas.width || this.x < 0) this.dx = -this.dx;
-        if (this.y > netCanvas.height || this.y < 0) this.dy = -this.dy;
+      // reduce nodes for mobile
+      const isMobile = window.innerWidth < 768;
+      const layers = isMobile ? 3 : 5;
+      const nodesPerLayer = isMobile ? 3 : 4;
 
-        var dx = netMouse.x - this.x;
-        var dy = netMouse.y - this.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < netMouse.radius) {
-          var force = (netMouse.radius - distance) / netMouse.radius;
-          this.x -= (dx / distance) * force * 3;
-          this.y -= (dy / distance) * force * 3;
-        }
-
-        this.x += this.dx;
-        this.y += this.dy;
-        
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = isDark ? '#12CBA6' : '#141414'; 
-        ctx.fill();
-      };
-
-      for (var i = 0; i < netParticleCount; i++) {
-        netParticles.push(new NetParticle());
+      function resizeDAG() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initDAG();
       }
+      window.addEventListener('resize', resizeDAG);
 
-      function animateNet() {
-        requestAnimationFrame(animateNet);
-        ctx.clearRect(0, 0, netCanvas.width, netCanvas.height);
+      function initDAG() {
+        nodes = [];
+        edges = [];
+        packets = [];
+        const layerWidth = canvas.width / layers;
         
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-        for (var i = 0; i < netParticles.length; i++) {
-          netParticles[i].update(isDark);
-          
-          for (var j = i + 1; j < netParticles.length; j++) {
-            var dx = netParticles[i].x - netParticles[j].x;
-            var dy = netParticles[i].y - netParticles[j].y;
-            var distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < netMaxDistance) {
-              var opacity = 1 - (distance / netMaxDistance);
-              ctx.beginPath();
-              if(isDark) {
-                ctx.strokeStyle = 'rgba(177, 150, 255, ' + (opacity * 0.4) + ')';
-              } else {
-                ctx.strokeStyle = 'rgba(47, 75, 255, ' + (opacity * 0.5) + ')';
-              }
-              ctx.lineWidth = 1;
-              ctx.moveTo(netParticles[i].x, netParticles[i].y);
-              ctx.lineTo(netParticles[j].x, netParticles[j].y);
-              ctx.stroke();
-            }
+        // Create Nodes
+        for(let i=0; i<layers; i++) {
+          for(let j=0; j<nodesPerLayer; j++) {
+            const x = (i * layerWidth) + (layerWidth/2) + (Math.random()*60 - 30);
+            const y = ((j+1) * canvas.height / (nodesPerLayer+1)) + (Math.random()*60 - 30);
+            nodes.push({ id: `${i}-${j}`, x, y, layer: i, active: 0 });
           }
         }
+
+        // Create Edges
+        for(let i=0; i<layers-1; i++) {
+          const currentLayer = nodes.filter(n => n.layer === i);
+          const nextLayer = nodes.filter(n => n.layer === i+1);
+          currentLayer.forEach(n1 => {
+            const targets = nextLayer.sort(() => 0.5 - Math.random()).slice(0, 2);
+            targets.forEach(n2 => {
+              edges.push({ source: n1, target: n2 });
+            });
+          });
+        }
       }
-      animateNet();
+
+      function spawnPacket() {
+        if(edges.length === 0) return;
+        const edge = edges[Math.floor(Math.random() * edges.length)];
+        packets.push({ edge, progress: 0, speed: 0.01 + Math.random()*0.01 });
+        setTimeout(spawnPacket, 300 + Math.random() * 800);
+      }
+
+      function drawDAG() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        
+        // Draw Edges
+        ctx.lineWidth = 2;
+        edges.forEach(e => {
+          ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+          ctx.beginPath();
+          ctx.moveTo(e.source.x, e.source.y);
+          ctx.lineTo(e.target.x, e.target.y);
+          ctx.stroke();
+        });
+
+        // Update and Draw Packets
+        for(let i = packets.length-1; i>=0; i--) {
+          let p = packets[i];
+          p.progress += p.speed;
+          if(p.progress >= 1) {
+            p.edge.target.active = 1.0; 
+            packets.splice(i, 1);
+          } else {
+            const cx = p.edge.source.x + (p.edge.target.x - p.edge.source.x) * p.progress;
+            const cy = p.edge.source.y + (p.edge.target.y - p.edge.source.y) * p.progress;
+            ctx.fillStyle = '#12CBA6'; 
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI*2);
+            ctx.fill();
+          }
+        }
+
+        // Draw Nodes
+        nodes.forEach(n => {
+          if(n.active > 0) n.active -= 0.02;
+          if(n.active < 0) n.active = 0;
+
+          if(n.active > 0) {
+            ctx.fillStyle = `rgba(18, 203, 166, ${n.active + 0.2})`;
+          } else {
+            ctx.fillStyle = isDark ? '#141414' : '#ffffff';
+          }
+          ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.3)' : '#141414';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 10, 0, Math.PI*2);
+          ctx.fill();
+          ctx.stroke();
+        });
+
+        requestAnimationFrame(drawDAG);
+      }
+
+      resizeDAG();
+      drawDAG();
+      spawnPacket();
     }
   }
 
