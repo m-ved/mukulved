@@ -121,6 +121,31 @@ a{color:var(--blue);text-decoration:none}
   transition:width .08s linear;
   pointer-events:none;
 }
+/* ---------- block wipe transition ---------- */
+.wipe-transition {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+.wipe-block {
+  flex: 1;
+  background: var(--ink);
+  transform-origin: top;
+  animation: wipeUp 0.8s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+}
+.wipe-block:nth-child(2) { animation-delay: 0.1s; background: var(--coral); }
+.wipe-block:nth-child(3) { animation-delay: 0.2s; background: var(--mint); }
+.wipe-block:nth-child(4) { animation-delay: 0.3s; background: var(--yellow); }
+.wipe-block:nth-child(5) { animation-delay: 0.4s; background: var(--bg); }
+
+@keyframes wipeUp {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
 
 /* ---------- shared building blocks ---------- */
 .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
@@ -361,7 +386,6 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
   display: flex;
   flex-shrink: 0;
   width: max-content;
-  animation: marquee-scroll 24s linear infinite;
   will-change: transform;
   transform: translateZ(0);
 }
@@ -378,10 +402,6 @@ html[data-theme="dark"] .theme-toggle .moon{display:none}
 .marquee-content .star {
   display: inline-block;
   margin: 0 24px;
-}
-@keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
 }
 
 html[data-theme="dark"] .marquee-wrap {

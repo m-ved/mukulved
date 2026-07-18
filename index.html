@@ -64,6 +64,9 @@
 </script>
 </head>
 <body>
+<div class="wipe-transition" id="wipe">
+  <div class="wipe-block"></div><div class="wipe-block"></div><div class="wipe-block"></div><div class="wipe-block"></div><div class="wipe-block"></div>
+</div>
 <a class="skip" href="#main">Skip to content</a>
 <canvas id="network-bg" aria-hidden="true"></canvas>
 
@@ -781,6 +784,44 @@
   </div>
 </div>
 <script>
+  // block wipe cleanup
+  setTimeout(() => {
+    const wipe = document.getElementById('wipe');
+    if(wipe) wipe.style.display = 'none';
+  }, 1500);
+
+  // velocity marquee
+  if(!reduce) {
+    const marqueeEl = document.querySelector('.marquee');
+    if(marqueeEl) {
+      let marqueePos = 0;
+      let scrollSpeed = 0;
+      let lastScrollY = window.scrollY;
+
+      window.addEventListener('scroll', () => {
+        let diff = window.scrollY - lastScrollY;
+        scrollSpeed = diff * 0.2;
+        lastScrollY = window.scrollY;
+      }, {passive:true});
+
+      function animateMarquee() {
+        marqueePos -= (1 + scrollSpeed);
+        scrollSpeed *= 0.9; 
+        
+        // The original marquee has 4 children. We loop when it shifts by 50%.
+        const width = marqueeEl.scrollWidth / 2;
+        if(width > 0) {
+          if(marqueePos < -width) marqueePos += width;
+          if(marqueePos > 0) marqueePos -= width;
+        }
+        
+        marqueeEl.style.transform = `translate3d(${marqueePos}px, 0, 0) skewX(${-scrollSpeed}deg)`;
+        requestAnimationFrame(animateMarquee);
+      }
+      animateMarquee();
+    }
+  }
+
   // emote companion logic
   if(!reduce) {
     const wrapper = document.getElementById('emoteWrapper');
