@@ -1,8 +1,8 @@
 {
-  "name": "Mukul Ved — Data & ML Engineer",
+  "name": "Mukul Ved | AI/ML & Data Engineer",
   "short_name": "Mukul Ved",
-  "description": "Data pipelines and applied-ML systems that turn messy data into decisions.",
-  "start_url": "/",
+  "description": "Mukul Ved is a Chicago-based AI/ML engineer building clinical NLP, retrieval-augmented generation (RAG), and production data pipelines. Explore his work at McKesson and Dell.",
+  "start_url": "./",
   "display": "standalone",
   "theme_color": "#2F4BFF",
   "background_color": "#F3F1E9",
